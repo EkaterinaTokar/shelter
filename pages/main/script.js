@@ -3,13 +3,12 @@ function windowsize() {
   petsWrapper.style.cssText = "";
   let windowWidth = window.innerWidth; ///window.screen.width;
   if (windowWidth > 1280) {
-    petsWrapper.style.cssText = `max-width: 990px;`;
+    petsWrapper.style.cssText = `max-width: 1100px;`;
   } else if (windowWidth <= 1279 && windowWidth > 767) {
-    petsWrapper.style.cssText = `width: 600px;
+    petsWrapper.style.cssText = `max-width: 600px;
      margin: 0 10px 0 10px`;
   } else if (windowWidth <= 767) {
-    pets.style.cssText = ` justify-content: center;`;
-    petsWrapper.style.cssText = `width: 270px`;
+    petsWrapper.style.cssText = `max-width: 270px`;
   }
 }
 
@@ -18,12 +17,15 @@ let burger = document.querySelector(".header__burger");
 let headerNav = document.querySelector(".header__navigation");
 let headerBurger = document.querySelector(".header__burger");
 let headerLogo = document.querySelector(".header__logo");
+let headerWrapper = document.querySelector(".header__wrapper");
+let wrapperBackground = document.querySelector(".wrapper-background");
 
 burger.addEventListener("click", (event) => {
   event.preventDefault();
   headerNav.classList.toggle("active");
   burger.classList.toggle("close");
   headerLogo.classList.toggle("change");
+  headerWrapper.classList.toggle("changeLogo");
   if (headerBurger.classList.contains("close")) {
     document.body.style.overflow = "hidden";
   } else {
@@ -31,11 +33,17 @@ burger.addEventListener("click", (event) => {
   }
 });
 
-headerNav.addEventListener("click", () => {
-  if (headerNav.classList.contains("active")) {
-    headerNav.classList.toggle("active");
-    burger.classList.toggle("close");
-    headerLogo.classList.toggle("change");
+wrapperBackground.addEventListener("click", (event) => {
+  if (
+    event.target.classList.contains("not-only__wrapper") ||
+    event.target.classList.contains("header__wrapper") ||
+    event.target.classList.contains("not-only__sub-heading") ||
+    event.target.classList.contains("not-only__heading")
+  ) {
+    headerNav.classList.remove("active");
+    burger.classList.remove("close");
+    headerLogo.classList.remove("change");
+    headerWrapper.classList.remove("changeLogo");
     document.body.style.overflow = "";
   }
 });
@@ -46,6 +54,7 @@ navigationItem.forEach((el) => {
     headerNav.classList.remove("active");
     burger.classList.remove("close");
     headerLogo.classList.remove("change");
+    headerWrapper.classList.remove("changeLogo");
     document.body.style.overflow = "";
   });
 });
@@ -82,65 +91,182 @@ function learnMore(event) {
 let buttonArrowRight = document.querySelector(".button-arrow_right");
 let buttonArrowLeft = document.querySelector(".button-arrow_left");
 let petsWrapper = document.querySelector(".pets__wrapper");
-let pets = document.querySelector(".pets");
 
-let div1 = document.createElement("div");
-div1.classList = "pets__card";
-let div2 = document.createElement("div");
-div2.classList = "pets__card";
-let div3 = document.createElement("div");
-div3.classList = "pets__card";
+let petsLeft = document.getElementById("pets_left");
+let petsCenter = document.getElementById("pets_center");
+let petsRight = document.getElementById("pets_right");
 
-let currentCard1 = -1;
-let currentCard2 = -1;
-let currentCard3 = -1;
+function createPetsCard() {
+  let div = document.createElement("div");
+  div.classList = "pets__card";
+  return div;
+}
+
+let currentCard1;
+let currentCard2;
+let currentCard3;
+
+let rightInd1;
+let rightInd2;
+let rightInd3;
+
+let leftInd1;
+let leftInd2;
+let leftInd3;
+
+let map = new Map();
+map.set("Jenifer", 0);
+map.set("Sophia", 1);
+map.set("Woody", 2);
+map.set("Scarlet", 3);
+map.set("Katrine", 4);
+map.set("Timmy", 5);
+map.set("Freddy", 6);
+map.set("Charly", 7);
+
+function random() {
+  let nameArr = [
+    "Jenifer",
+    "Sophia",
+    "Woody",
+    "Scarlet",
+    "Katrine",
+    "Timmy",
+    "Freddy",
+    "Charly",
+  ];
+  let randomPets = nameArr
+    .map((i) => [Math.random(), i])
+    .sort()
+    .map((i) => i[1]);
+  return randomPets;
+}
+
+let randomName;
+function centerIndex() {
+  windowsize();
+  let centerIndArr = [];
+  randomName = random();
+  while (true) {
+    currentCard1 = map.get(randomName[Math.floor(Math.random() * 8)]);
+    if (currentCard1 != currentCard2 && currentCard1 != currentCard3) {
+      break;
+    }
+  }
+  while (true) {
+    currentCard2 = map.get(randomName[Math.floor(Math.random() * 8)]);
+    if (currentCard2 != currentCard1 && currentCard2 != currentCard3) {
+      break;
+    }
+  }
+  while (true) {
+    currentCard3 = map.get(randomName[Math.floor(Math.random() * 8)]);
+    if (currentCard3 != currentCard1 && currentCard3 != currentCard2) {
+      break;
+    }
+  }
+  centerIndArr.push(currentCard1);
+  centerIndArr.push(currentCard2);
+  centerIndArr.push(currentCard3);
+  return centerIndArr;
+}
+
+let randomIndexArr;
+function randomIndArrRight() {
+  windowsize();
+  randomIndexArr = [];
+  randomName = random();
+  while (true) {
+    rightInd1 = map.get(randomName[Math.floor(Math.random() * 8)]);
+    if (
+      rightInd1 != currentCard1 &&
+      rightInd1 != currentCard2 &&
+      rightInd1 != currentCard3
+    ) {
+      break;
+    }
+  }
+  while (true) {
+    rightInd2 = map.get(randomName[Math.floor(Math.random() * 8)]);
+    if (
+      rightInd2 != currentCard1 &&
+      rightInd2 != currentCard2 &&
+      rightInd2 != currentCard3 &&
+      rightInd2 != rightInd1
+    ) {
+      break;
+    }
+  }
+  while (true) {
+    rightInd3 = map.get(randomName[Math.floor(Math.random() * 8)]);
+    if (
+      rightInd3 != currentCard1 &&
+      rightInd3 != currentCard2 &&
+      rightInd3 != currentCard3 &&
+      rightInd3 != rightInd1 &&
+      rightInd3 != rightInd2
+    ) {
+      break;
+    }
+  }
+  randomIndexArr.push(rightInd1);
+  randomIndexArr.push(rightInd2);
+  randomIndexArr.push(rightInd3);
+  return randomIndexArr;
+}
+function randomIndArrLeft() {
+  windowsize();
+  randomIndexArr = [];
+  randomName = random();
+  while (true) {
+    leftInd1 = map.get(randomName[Math.floor(Math.random() * 8)]);
+    if (
+      leftInd1 != currentCard1 &&
+      leftInd1 != currentCard2 &&
+      leftInd1 != currentCard3
+    ) {
+      break;
+    }
+  }
+  while (true) {
+    leftInd2 = map.get(randomName[Math.floor(Math.random() * 8)]);
+    if (
+      leftInd2 != currentCard1 &&
+      leftInd2 != currentCard2 &&
+      leftInd2 != currentCard3 &&
+      leftInd2 != leftInd1
+    ) {
+      break;
+    }
+  }
+  while (true) {
+    leftInd3 = map.get(randomName[Math.floor(Math.random() * 8)]);
+    if (
+      leftInd3 != currentCard1 &&
+      leftInd3 != currentCard2 &&
+      leftInd3 != currentCard3 &&
+      leftInd3 != leftInd1 &&
+      leftInd3 != leftInd2
+    ) {
+      break;
+    }
+  }
+  randomIndexArr.push(leftInd1);
+  randomIndexArr.push(leftInd2);
+  randomIndexArr.push(leftInd3);
+  return randomIndexArr;
+}
 
 let arr;
-
 function getData(arr) {
-  windowsize();
-
-  let ind1;
-  let ind2;
-  let ind3;
-  while (true) {
-    ind1 = Math.floor(Math.random() * arr.length);
-    if (ind1 != currentCard1 && ind1 != currentCard2 && ind1 != currentCard3) {
-      break;
-    }
-  }
-  while (true) {
-    ind2 = Math.floor(Math.random() * arr.length);
-    if (
-      ind2 != currentCard1 &&
-      ind2 != currentCard2 &&
-      ind2 != currentCard3 &&
-      ind2 != ind1
-    ) {
-      break;
-    }
-  }
-  while (true) {
-    ind3 = Math.floor(Math.random() * arr.length);
-    if (
-      ind3 != currentCard1 &&
-      ind3 != currentCard2 &&
-      ind3 != currentCard3 &&
-      ind3 != ind1 &&
-      ind3 != ind2
-    ) {
-      break;
-    }
-  }
-  currentCard1 = ind1;
-  currentCard2 = ind2;
-  currentCard3 = ind3;
-
-  div1.innerHTML = `
+  let centerArrInd = centerIndex();
+  for (let i = 0; i < 3; i++) {
+    let div = createPetsCard();
+    div.innerHTML = `
     <img class="pets__card-img"
-      src="${arr[currentCard1].img}"
-      alt="${arr[currentCard1].breed}"/>
-    <span class="pets__name">${arr[currentCard1].name}</span>
+      src="${arr[centerArrInd[i]].img}"
+      alt="${arr[centerArrInd[i]].breed}"/>
+    <span class="pets__name">${arr[centerArrInd[i]].name}</span>
     <button class="button button_border button__pets">
     Learn more
     </button>
@@ -150,30 +276,76 @@ function getData(arr) {
     <p class ="close__code">&#10006;</p></button>
      <div class = "pets__modal">
       <img class="pets__modal-img"
-      src="${arr[currentCard1].img}"
-      alt="${arr[currentCard1].breed}"/>
+      src="${arr[centerArrInd[i]].img}"
+      alt="${arr[centerArrInd[i]].breed}"/>
        <div class = "modal__content">
-       <h3 class = "modal__pets_name">${arr[currentCard1].name}</h3>
-       <h4 class ="modal__pets_type">${arr[currentCard1].type} - ${arr[currentCard1].breed}</h4>
-       <p class ="modal__pets_desc">${arr[currentCard1].description}</p>
+       <h3 class = "modal__pets_name">${arr[centerArrInd[i]].name}</h3>
+       <h4 class ="modal__pets_type">${arr[centerArrInd[i]].type} - ${
+      arr[centerArrInd[i]].breed
+    }</h4>
+       <p class ="modal__pets_desc">${arr[centerArrInd[i]].description}</p>
        <ul class ="modal__pets_items">
-       <li class = "modal__item"><span class = "modal__text">Age:</span>${arr[currentCard1].age}</li>
-       <li class = "modal__item"><span class = "modal__text">Inoculations:</span> ${arr[currentCard1].inoculations}</li>
-       <li class = "modal__item"><span class = "modal__text">Diseases: </span>${arr[currentCard1].diseases}</li>
-       <li class = "modal__item"><span class = "modal__text">Parasites: </span>${arr[currentCard1].parasites}</li>
+       <li class = "modal__item"><span class = "modal__text">Age:</span>${
+         arr[centerArrInd[i]].age
+       }</li>
+       <li class = "modal__item"><span class = "modal__text">Inoculations:</span> ${
+         arr[centerArrInd[i]].inoculations
+       }</li>
+       <li class = "modal__item"><span class = "modal__text">Diseases: </span>${
+         arr[centerArrInd[i]].diseases
+       }</li>
+       <li class = "modal__item"><span class = "modal__text">Parasites: </span>${
+         arr[centerArrInd[i]].parasites
+       }</li>
        </ul>
        </div>
       </div>
       <div>
     </div>
   `;
-  pets.append(div1);
+    petsCenter.append(div);
+    /*Popup */
+    let buttonPets = document.querySelectorAll(".button__pets");
+    buttonPets.forEach((el) => {
+      el.addEventListener("click", learnMore);
+    });
 
-  div2.innerHTML = `
+    /*mouse*/
+    let buttonModal;
+    function mouseLeave(event) {
+      event.preventDefault();
+      let buttonModalCloseActive = event.relatedTarget;
+      if (buttonModalCloseActive) {
+        console.log(buttonModalCloseActive);
+        buttonModal = buttonModalCloseActive.querySelector(
+          ".button__modal-close"
+        );
+        buttonModal.classList.add("hover");
+      }
+      let petsModalWrapper = event.target;
+      petsModalWrapper.addEventListener("mouseover", function () {
+        buttonModal = buttonModalCloseActive.querySelector(
+          ".button__modal-close"
+        );
+        buttonModal.classList.remove("hover");
+      });
+    }
+    let petsModalWrapper = document.querySelectorAll(".pets__modal_wrapper");
+    petsModalWrapper.forEach((el) => {
+      el.addEventListener("mouseleave", mouseLeave);
+    });
+  }
+
+  let randomIndex;
+  function rightCards() {
+    randomIndex = randomIndArrRight();
+    for (let i = 0; i < 3; i++) {
+      let div = createPetsCard();
+      div.innerHTML = `
     <img class="pets__card-img"
-      src="${arr[currentCard2].img}"
-      alt="${arr[currentCard2].breed}"/>
-    <span class="pets__name">${arr[currentCard2].name}</span>
+      src="${arr[randomIndex[i]].img}"
+      alt="${arr[randomIndex[i]].breed}"/>
+    <span class="pets__name">${arr[randomIndex[i]].name}</span>
     <button class="button button_border button__pets">
     Learn more
     </button>
@@ -183,30 +355,77 @@ function getData(arr) {
     <p class ="close__code">&#10006;</p></button>
      <div class = "pets__modal">
       <img class="pets__modal-img"
-      src="${arr[currentCard2].img}"
-      alt="${arr[currentCard2].breed}"/>
+      src="${arr[randomIndex[i]].img}"
+      alt="${arr[randomIndex[i]].breed}"/>
        <div class = "modal__content">
-       <h3 class = "modal__pets_name">${arr[currentCard2].name}</h3>
-       <h4 class ="modal__pets_type">${arr[currentCard2].type} - ${arr[currentCard2].breed}</h4>
-       <p class ="modal__pets_desc">${arr[currentCard2].description}</p>
+       <h3 class = "modal__pets_name">${arr[randomIndex[i]].name}</h3>
+       <h4 class ="modal__pets_type">${arr[randomIndex[i]].type} - ${
+        arr[randomIndex[i]].breed
+      }</h4>
+       <p class ="modal__pets_desc">${arr[randomIndex[i]].description}</p>
        <ul class ="modal__pets_items">
-       <li class = "modal__item"><span class = "modal__text">Age:</span>${arr[currentCard2].age}</li>
-       <li class = "modal__item"><span class = "modal__text">Inoculations:</span>${arr[currentCard2].inoculations}</li>
-       <li class = "modal__item"><span class = "modal__text">Diseases: </span> ${arr[currentCard2].diseases}</li>
-       <li class = "modal__item"><span class = "modal__text">Parasites: </span> ${arr[currentCard2].parasites}</li>
+       <li class = "modal__item"><span class = "modal__text">Age:</span>${
+         arr[randomIndex[i]].age
+       }</li>
+       <li class = "modal__item"><span class = "modal__text">Inoculations:</span> ${
+         arr[randomIndex[i]].inoculations
+       }</li>
+       <li class = "modal__item"><span class = "modal__text">Diseases: </span>${
+         arr[randomIndex[i]].diseases
+       }</li>
+       <li class = "modal__item"><span class = "modal__text">Parasites: </span>${
+         arr[randomIndex[i]].parasites
+       }</li>
        </ul>
        </div>
       </div>
-      </div>
+      <div>
     </div>
   `;
-  pets.append(div2);
+      petsRight.append(div);
+    }
+    /*Popup */
+    let buttonPets = document.querySelectorAll(".button__pets");
+    buttonPets.forEach((el) => {
+      el.addEventListener("click", learnMore);
+    });
 
-  div3.innerHTML = `
+    /*mouse*/
+    let buttonModal;
+    function mouseLeave(event) {
+      event.preventDefault();
+      let buttonModalCloseActive = event.relatedTarget;
+      if (buttonModalCloseActive) {
+        console.log(buttonModalCloseActive);
+        buttonModal = buttonModalCloseActive.querySelector(
+          ".button__modal-close"
+        );
+        buttonModal.classList.add("hover");
+      }
+      let petsModalWrapper = event.target;
+      petsModalWrapper.addEventListener("mouseover", function () {
+        buttonModal = buttonModalCloseActive.querySelector(
+          ".button__modal-close"
+        );
+        buttonModal.classList.remove("hover");
+      });
+    }
+    let petsModalWrapper = document.querySelectorAll(".pets__modal_wrapper");
+    petsModalWrapper.forEach((el) => {
+      el.addEventListener("mouseleave", mouseLeave);
+    });
+  }
+  rightCards();
+
+  function leftCards() {
+    randomIndex = randomIndArrLeft();
+    for (let i = 0; i < 3; i++) {
+      let div = createPetsCard();
+      div.innerHTML = `
     <img class="pets__card-img"
-      src="${arr[currentCard3].img}"
-      alt="${arr[currentCard3].breed}"/>
-    <span class="pets__name">${arr[currentCard3].name}</span>
+      src="${arr[randomIndex[i]].img}"
+      alt="${arr[randomIndex[i]].breed}"/>
+    <span class="pets__name">${arr[randomIndex[i]].name}</span>
     <button class="button button_border button__pets">
     Learn more
     </button>
@@ -216,192 +435,107 @@ function getData(arr) {
     <p class ="close__code">&#10006;</p></button>
      <div class = "pets__modal">
       <img class="pets__modal-img"
-      src="${arr[currentCard3].img}"
-      alt="${arr[currentCard3].breed}"/>
+      src="${arr[randomIndex[i]].img}"
+      alt="${arr[randomIndex[i]].breed}"/>
        <div class = "modal__content">
-         <h3 class = "modal__pets_name">${arr[currentCard3].name}</h3>
-         <h4 class ="modal__pets_type">${arr[currentCard3].type} - ${arr[currentCard3].breed}</h4>
-         <p class ="modal__pets_desc">${arr[currentCard3].description}</p>
-          <ul class ="modal__pets_items">
-           <li class = "modal__item"><span class = "modal__text">Age:</span>${arr[currentCard3].age}</li>
-           <li class = "modal__item"><span class = "modal__text">Inoculations:</span> ${arr[currentCard3].inoculations}</li>
-           <li class = "modal__item"><span class = "modal__text">Diseases: </span>${arr[currentCard3].diseases}</li>
-           <li class = "modal__item"><span class = "modal__text">Parasites: </span> ${arr[currentCard3].parasites}</li>
-         </ul>
+       <h3 class = "modal__pets_name">${arr[randomIndex[i]].name}</h3>
+       <h4 class ="modal__pets_type">${arr[randomIndex[i]].type} - ${
+        arr[randomIndex[i]].breed
+      }</h4>
+       <p class ="modal__pets_desc">${arr[randomIndex[i]].description}</p>
+       <ul class ="modal__pets_items">
+       <li class = "modal__item"><span class = "modal__text">Age:</span>${
+         arr[randomIndex[i]].age
+       }</li>
+       <li class = "modal__item"><span class = "modal__text">Inoculations:</span> ${
+         arr[randomIndex[i]].inoculations
+       }</li>
+       <li class = "modal__item"><span class = "modal__text">Diseases: </span>${
+         arr[randomIndex[i]].diseases
+       }</li>
+       <li class = "modal__item"><span class = "modal__text">Parasites: </span>${
+         arr[randomIndex[i]].parasites
+       }</li>
+       </ul>
        </div>
       </div>
-      </div>
-    </div>
-  `;
-  pets.append(div3);
-  /*Popup */
-  let buttonPets = document.querySelectorAll(".button__pets");
-  buttonPets.forEach((el) => {
-    el.addEventListener("click", learnMore);
-  });
-
-  /*mouse*/
-  function mouseLeave(event) {
-    event.preventDefault();
-    let buttonModalCloseActive = event.relatedTarget;
-    if (buttonModalCloseActive) {
-      console.log(buttonModalCloseActive);
-      let buttonModal = buttonModalCloseActive.querySelector(
-        ".button__modal-close"
-      );
-      buttonModal.classList.add("hover");
+      <div>
+     </div>
+     `;
+      petsLeft.append(div);
     }
-    let petsModalWrapper = event.target;
-    petsModalWrapper.addEventListener("mouseover", function () {
-      let buttonModal = buttonModalCloseActive.querySelector(
-        ".button__modal-close"
-      );
-      buttonModal.classList.remove("hover");
+    /*Popup */
+    let buttonPets = document.querySelectorAll(".button__pets");
+    buttonPets.forEach((el) => {
+      el.addEventListener("click", learnMore);
+    });
+
+    /*mouse*/
+    let buttonModal;
+    function mouseLeave(event) {
+      event.preventDefault();
+      let buttonModalCloseActive = event.relatedTarget;
+      if (buttonModalCloseActive) {
+        console.log(buttonModalCloseActive);
+        buttonModal = buttonModalCloseActive.querySelector(
+          ".button__modal-close"
+        );
+        buttonModal.classList.add("hover");
+      }
+      let petsModalWrapper = event.target;
+      petsModalWrapper.addEventListener("mouseover", function () {
+        buttonModal = buttonModalCloseActive.querySelector(
+          ".button__modal-close"
+        );
+        buttonModal.classList.remove("hover");
+      });
+    }
+    let petsModalWrapper = document.querySelectorAll(".pets__modal_wrapper");
+    petsModalWrapper.forEach((el) => {
+      el.addEventListener("mouseleave", mouseLeave);
     });
   }
-  let petsModalWrapper = document.querySelectorAll(".pets__modal_wrapper");
-  petsModalWrapper.forEach((el) => {
-    el.addEventListener("mouseleave", mouseLeave);
+  leftCards();
+
+  petsWrapper.addEventListener("animationend", (event) => {
+    if (event.animationName == "toright") {
+      petsWrapper.classList.remove("right");
+      document.getElementById("pets_center").innerHTML = petsRight.innerHTML;
+      currentCard1 = rightInd1;
+      currentCard2 = rightInd2;
+      currentCard3 = rightInd3;
+      petsRight.innerHTML = "";
+      petsLeft.innerHTML = "";
+      rightCards();
+      leftCards();
+    } else {
+      petsWrapper.classList.remove("left");
+      document.getElementById("pets_center").innerHTML = petsLeft.innerHTML;
+      currentCard1 = leftInd1;
+      currentCard2 = leftInd2;
+      currentCard3 = leftInd3;
+      petsLeft.innerHTML = "";
+      petsRight.innerHTML = "";
+      rightCards();
+      leftCards();
+    }
+    buttonArrowRight.addEventListener("click", right);
+    buttonArrowLeft.addEventListener("click", left);
   });
 }
 
-function changeCardsRight(arr) {
-  let ind1;
-  let ind2;
-  let ind3;
-  while (true) {
-    ind1 = Math.floor(Math.random() * arr.length);
-    if (ind1 != currentCard1 && ind1 != currentCard2 && ind1 != currentCard3) {
-      break;
-    }
-  }
-  while (true) {
-    ind2 = Math.floor(Math.random() * arr.length);
-    if (
-      ind2 != currentCard1 &&
-      ind2 != currentCard2 &&
-      ind2 != currentCard3 &&
-      ind2 != ind1
-    ) {
-      break;
-    }
-  }
-  while (true) {
-    ind3 = Math.floor(Math.random() * arr.length);
-    if (
-      ind3 != currentCard1 &&
-      ind3 != currentCard2 &&
-      ind3 != currentCard3 &&
-      ind3 != ind1 &&
-      ind3 != ind2
-    ) {
-      break;
-    }
-  }
-  currentCard1 = ind1;
-  currentCard2 = ind2;
-  currentCard3 = ind3;
+buttonArrowRight.addEventListener("click", right);
+buttonArrowLeft.addEventListener("click", left);
 
-  div1.innerHTML = `
-    <img class="pets__card-img"
-      src="${arr[currentCard1].img}"
-      alt="${arr[currentCard1].breed}"/>
-    <span class="pets__name">${arr[currentCard1].name}</span>
-    <button class="button button_border button__pets">
-    Learn more
-    </button>
-    <div class = "modal__wrapper">
-    <div class = "pets__modal_wrapper">
-    <button class = "button__modal-close">
-    <p class ="close__code">&#10006;</p></button>
-     <div class = "pets__modal">
-      <img class="pets__modal-img"
-      src="${arr[currentCard1].img}"
-      alt="${arr[currentCard1].breed}"/>
-       <div class = "modal__content">
-       <h3 class = "modal__pets_name">${arr[currentCard1].name}</h3>
-       <h4 class ="modal__pets_type">${arr[currentCard1].type} - ${arr[currentCard1].breed}</h4>
-       <p class ="modal__pets_desc">${arr[currentCard1].description}</p>
-       <ul class ="modal__pets_items">
-       <li class = "modal__item"><span class = "modal__text">Age:</span>${arr[currentCard1].age}</li>
-       <li class = "modal__item"><span class = "modal__text">Inoculations:</span> ${arr[currentCard1].inoculations}</li>
-       <li class = "modal__item"><span class = "modal__text">Diseases: </span> ${arr[currentCard1].diseases}</li>
-       <li class = "modal__item"><span class = "modal__text">Parasites: </span> ${arr[currentCard1].parasites}</li>
-       </ul>
-       </div>
-      </div>
-      </div>
-    </div>
-  `;
-
-  div2.innerHTML = `
-    <img class="pets__card-img"
-      src="${arr[currentCard2].img}"
-      alt="${arr[currentCard2].breed}"/>
-    <span class="pets__name">${arr[currentCard2].name}</span>
-    <button class="button button_border button__pets">
-    Learn more
-    </button>
-    <div class = "modal__wrapper">
-    <div class = "pets__modal_wrapper">
-    <button class = "button__modal-close">
-    <p class ="close__code">&#10006;</p></button>
-     <div class = "pets__modal">
-      <img class="pets__modal-img"
-      src="${arr[currentCard2].img}"
-      alt="${arr[currentCard2].breed}"/>
-       <div class = "modal__content">
-       <h3 class = "modal__pets_name">${arr[currentCard2].name}</h3>
-       <h4 class ="modal__pets_type">${arr[currentCard2].type} - ${arr[currentCard2].breed}</h4>
-       <p class ="modal__pets_desc">${arr[currentCard2].description}</p>
-       <ul class ="modal__pets_items">
-       <li class = "modal__item"><span class = "modal__text">Age:</span>${arr[currentCard2].age}</li>
-       <li class = "modal__item"><span class = "modal__text">Inoculations:</span> ${arr[currentCard2].inoculations}</li>
-       <li class = "modal__item"><span class = "modal__text">Diseases: </span>${arr[currentCard2].diseases}</li>
-       <li class = "modal__item"><span class = "modal__text">Parasites: </span> ${arr[currentCard2].parasites}</li>
-       </ul>
-       </div>
-      </div>
-      </div>
-    </div>
-  `;
-
-  div3.innerHTML = `
-    <img class="pets__card-img"
-      src="${arr[currentCard3].img}"
-      alt="${arr[currentCard3].breed}"/>
-    <span class="pets__name">${arr[currentCard3].name}</span>
-    <button class="button button_border button__pets">
-    Learn more
-    </button>
-    <div class = "modal__wrapper">
-    <div class = "pets__modal_wrapper">
-      <button class = "button__modal-close">
-    <p class ="close__code">&#10006;</p></button>
-      <div class = "pets__modal">
-       <img class="pets__modal-img"
-       src="${arr[currentCard3].img}"
-       alt="${arr[currentCard3].breed}"/>
-        <div class = "modal__content">
-         <h3 class = "modal__pets_name">${arr[currentCard3].name}</h3>
-       <h4 class ="modal__pets_type">${arr[currentCard3].type} - ${arr[currentCard3].breed}</h4>
-       <p class ="modal__pets_desc">${arr[currentCard3].description}</p>
-         <ul class ="modal__pets_items">
-           <li class = "modal__item"><span class = "modal__text">Age:</span>${arr[currentCard3].age}</li>
-          <li class = "modal__item"><span class = "modal__text">Inoculations:</span> ${arr[currentCard3].inoculations}</li>
-           <li class = "modal__item"><span class = "modal__text">Diseases: </span> ${arr[currentCard3].diseases}</li>
-           <li class = "modal__item"><span class = "modal__text">Parasites: </span> ${arr[currentCard3].parasites}</li>
-         </ul>
-       </div>
-      </div>
-      </div>
-    </div>
-  `;
-  /*Popup */
-  let buttonPets = document.querySelectorAll(".button__pets");
-  buttonPets.forEach((el) => {
-    el.addEventListener("click", learnMore);
-  });
+function right() {
+  petsWrapper.classList.add("right");
+  buttonArrowRight.removeEventListener("click", right);
+  buttonArrowLeft.removeEventListener("click", left);
+}
+function left() {
+  petsWrapper.classList.add("left");
+  buttonArrowRight.removeEventListener("click", right);
+  buttonArrowLeft.removeEventListener("click", left);
 }
 
 fetch("pets.json") //path to the file with json data
@@ -411,15 +545,3 @@ fetch("pets.json") //path to the file with json data
   .then((data) => {
     getData(data);
   });
-
-function changeCards() {
-  fetch("pets.json") //path to the file with json data
-    .then((response) => {
-      return response.json();
-    })
-    .then((data) => {
-      changeCardsRight(data);
-    });
-}
-buttonArrowRight.addEventListener("click", changeCards);
-buttonArrowLeft.addEventListener("click", changeCards);
